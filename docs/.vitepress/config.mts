@@ -6,6 +6,15 @@ export default defineConfig({
   
   lang: 'zh-CN',
   
+  // 忽略死链接检查（本地开发链接和未完成的页面）
+  ignoreDeadLinks: [
+    // 忽略本地开发链接
+    /^http:\/\/localhost/,
+    // 忽略未完成的指南页面
+    /\/guide\/error-handling/,
+    /\/guide\/authentication/,
+  ],
+  
   themeConfig: {
     logo: '/logo.svg',
     
