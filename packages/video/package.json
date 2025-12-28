@@ -1,0 +1,20 @@
+{
+  "name": "@123pan/video",
+  "version": "1.0.0",
+  "description": "123pan API SDK video Module",
+  "type": "module",
+  "main": "../../dist/video.js",
+  "module": "../../dist/video.esm.js",
+  "types": "../../dist/video.d.ts",
+  "keywords": [
+    "123pan",
+    "api",
+    "sdk",
+    "video"
+  ],
+  "author": "Your Name <1582157042@qq.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

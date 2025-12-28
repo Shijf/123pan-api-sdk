@@ -1,0 +1,21 @@
+{
+  "name": "@123pan/file",
+  "version": "1.0.0",
+  "description": "123pan API SDK File Management Module",
+  "type": "module",
+  "main": "../../dist/file.js",
+  "module": "../../dist/file.esm.js",
+  "types": "../../dist/file.d.ts",
+  "keywords": [
+    "123pan",
+    "api",
+    "sdk",
+    "file",
+    "management"
+  ],
+  "author": "Your Name <1582157042@qq.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "123pan-api-sdk-docs",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "123Pan API SDK 文档",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "^1.0.0"
+  }
+}
+

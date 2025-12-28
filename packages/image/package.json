@@ -1,0 +1,20 @@
+{
+  "name": "@123pan/image",
+  "version": "1.0.0",
+  "description": "123pan API SDK image Module",
+  "type": "module",
+  "main": "../../dist/image.js",
+  "module": "../../dist/image.esm.js",
+  "types": "../../dist/image.d.ts",
+  "keywords": [
+    "123pan",
+    "api",
+    "sdk",
+    "image"
+  ],
+  "author": "Your Name <1582157042@qq.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

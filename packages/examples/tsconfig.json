@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "../..",
+    "paths": {
+      "@123pan/core": ["./packages/core/src"],
+      "@123pan/file": ["./packages/file/src"],
+      "@123pan/share": ["./packages/share/src"],
+      "@123pan/offline": ["./packages/offline/src"],
+      "@123pan/user": ["./packages/user/src"],
+      "@123pan/direct-link": ["./packages/direct-link/src"],
+      "@123pan/image": ["./packages/image/src"],
+      "@123pan/video": ["./packages/video/src"],
+      "@123pan/sdk": ["./packages/sdk/src"]
+    },
+    "noEmit": true
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
+

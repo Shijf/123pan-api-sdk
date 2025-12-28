@@ -1,0 +1,21 @@
+{
+  "name": "@123pan/sdk",
+  "version": "1.0.0",
+  "description": "123pan API SDK - Complete SDK with all modules",
+  "type": "module",
+  "main": "../../dist/index.js",
+  "module": "../../dist/index.esm.js",
+  "types": "../../dist/index.d.ts",
+  "keywords": [
+    "123pan",
+    "api",
+    "sdk",
+    "typescript",
+    "cloud-storage"
+  ],
+  "author": "Your Name <1582157042@qq.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

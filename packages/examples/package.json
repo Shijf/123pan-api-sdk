@@ -1,0 +1,20 @@
+{
+  "name": "@123pan/examples",
+  "version": "1.0.0",
+  "description": "123pan API SDK examples and tests",
+  "type": "module",
+  "scripts": {
+    "test": "tsx index.ts",
+    "test:user": "tsx examples/user-test.ts",
+    "test:file": "tsx examples/file-test.ts",
+    "test:all": "tsx index.ts"
+  },
+  "dependencies": {
+    "tsx": "^4.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "private": true
+}

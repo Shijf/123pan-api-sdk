@@ -1,0 +1,55 @@
+# 源代码
+packages/
+src/
+
+# 配置文件
+tsconfig.json
+rollup.config.js
+.eslintrc.json
+.prettierrc
+
+# 开发相关
+.vscode/
+.idea/
+*.log
+*.lock
+.DS_Store
+Thumbs.db
+
+# 测试和示例
+__tests__/
+test/
+tests/
+*.test.ts
+*.spec.ts
+
+# 文档源码（保留构建后的文档）
+docs/
+
+# 脚本
+scripts/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# 其他
+*.map
+coverage/
+.nyc_output/
+node_modules/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
+
+# 只保留 dist 目录
+!dist/
+

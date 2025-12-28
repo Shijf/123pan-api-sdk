@@ -1,0 +1,21 @@
+{
+  "name": "@123pan/core",
+  "version": "1.0.0",
+  "description": "123pan API SDK Core - Authentication and HTTP client",
+  "type": "module",
+  "main": "../../dist/core.js",
+  "module": "../../dist/core.esm.js",
+  "types": "../../dist/core.d.ts",
+  "keywords": [
+    "123pan",
+    "api",
+    "sdk",
+    "core",
+    "authentication"
+  ],
+  "author": "Your Name <1582157042@qq.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "name": "@sharef/123pan-sdk",
+  "version": "1.0.0",
+  "description": "123Pan 开放平台 Node.js SDK - 提供完整的 TypeScript 类型支持，支持云盘、图床、视频转码等功能",
+  "private": false,
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./bundle": {
+      "import": "./dist/bundle.esm.js",
+      "require": "./dist/bundle.js",
+      "browser": "./dist/bundle.umd.js",
+      "types": "./dist/bundle.d.ts"
+    },
+    "./core": {
+      "import": "./dist/modules/core.esm.js",
+      "require": "./dist/modules/core.js",
+      "types": "./dist/modules/core.d.ts"
+    },
+    "./file": {
+      "import": "./dist/modules/file.esm.js",
+      "require": "./dist/modules/file.js",
+      "types": "./dist/modules/file.d.ts"
+    },
+    "./offline": {
+      "import": "./dist/modules/offline.esm.js",
+      "require": "./dist/modules/offline.js",
+      "types": "./dist/modules/offline.d.ts"
+    },
+    "./user": {
+      "import": "./dist/modules/user.esm.js",
+      "require": "./dist/modules/user.js",
+      "types": "./dist/modules/user.d.ts"
+    },
+    "./direct-link": {
+      "import": "./dist/modules/direct-link.esm.js",
+      "require": "./dist/modules/direct-link.js",
+      "types": "./dist/modules/direct-link.d.ts"
+    },
+    "./image": {
+      "import": "./dist/modules/image.esm.js",
+      "require": "./dist/modules/image.js",
+      "types": "./dist/modules/image.d.ts"
+    },
+    "./video": {
+      "import": "./dist/modules/video.esm.js",
+      "require": "./dist/modules/video.js",
+      "types": "./dist/modules/video.d.ts"
+    }
+  },
+  "workspaces": [
+    "packages/core",
+    "packages/file",
+    "packages/share",
+    "packages/offline",
+    "packages/user",
+    "packages/direct-link",
+    "packages/image",
+    "packages/video",
+    "packages/sdk",
+    "packages/demo",
+    "packages/examples"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint packages --ext .ts,.tsx",
+    "lint:fix": "eslint packages --ext .ts,.tsx --fix",
+    "test": "jest",
+    "dev-server": "node packages/demo/src/unified-server.mjs",
+    "examples": "yarn workspace @123pan/examples test",
+    "bootstrap": "npm install",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "123pan",
+    "api",
+    "sdk",
+    "typescript",
+    "cloud-storage",
+    "file-upload",
+    "image-hosting",
+    "video-transcode",
+    "offline-download",
+    "nodejs",
+    "123云盘"
+  ],
+  "author": {
+    "name": "sharef",
+    "email": "sharef@163.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@types/jest": "^29.5.8",
+    "@types/node": "^20.9.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "jest": "^29.7.0",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.5.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "axios": "^1.6.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shijf/123pan-api-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shijf/123pan-api-sdk/issues"
+  },
+  "homepage": "https://github.com/shijf/123pan-api-sdk#readme"
+}

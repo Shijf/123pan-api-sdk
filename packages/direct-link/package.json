@@ -1,0 +1,20 @@
+{
+  "name": "@123pan/direct-link",
+  "version": "1.0.0",
+  "description": "123pan API SDK direct-link Module",
+  "type": "module",
+  "main": "../../dist/direct-link.js",
+  "module": "../../dist/direct-link.esm.js",
+  "types": "../../dist/direct-link.d.ts",
+  "keywords": [
+    "123pan",
+    "api",
+    "sdk",
+    "direct-link"
+  ],
+  "author": "Your Name <1582157042@qq.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

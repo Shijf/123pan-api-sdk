@@ -1,0 +1,20 @@
+{
+  "name": "@123pan/offline",
+  "version": "1.0.0",
+  "description": "123pan API SDK offline Module",
+  "type": "module",
+  "main": "../../dist/offline.js",
+  "module": "../../dist/offline.esm.js",
+  "types": "../../dist/offline.d.ts",
+  "keywords": [
+    "123pan",
+    "api",
+    "sdk",
+    "offline"
+  ],
+  "author": "Your Name <1582157042@qq.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
