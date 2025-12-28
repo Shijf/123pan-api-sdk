@@ -5,7 +5,7 @@ SDK 主类提供了初始化配置和全局管理功能。
 ## 初始化
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 const sdk = new Pan123SDK({
   clientID: 'your-client-id',
@@ -157,7 +157,7 @@ try {
 ## 完整示例
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 async function main() {
   // 初始化 SDK

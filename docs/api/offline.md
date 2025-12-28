@@ -261,7 +261,7 @@ if (result.code === 0) {
 ## 完整示例
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 async function manageOfflineTasks() {
   const sdk = new Pan123SDK({

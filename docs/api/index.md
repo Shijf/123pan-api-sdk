@@ -13,7 +13,7 @@
 SDK 采用模块化设计，每个功能模块独立管理：
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 const sdk = new Pan123SDK({ ... });
 
@@ -113,7 +113,7 @@ import type {
   CreateShareParams,
   TranscodeVideoParams,
   // ... 更多类型
-} from '123pan-api-sdk';
+} from '@sharef/123pan-sdk';
 ```
 
 ## 错误处理

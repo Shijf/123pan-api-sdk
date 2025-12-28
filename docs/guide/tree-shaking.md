@@ -17,7 +17,7 @@ SDK 支持两种引入方式：**全量引入** 和 **按需引入**。您可以
 
 ```typescript
 // 默认导出，包含所有功能
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 const sdk = new Pan123SDK({
   clientID: 'your-client-id',

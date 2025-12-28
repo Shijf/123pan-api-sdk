@@ -7,7 +7,7 @@
 创建 SDK 实例时，你需要提供以下必需参数：
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 const sdk = new Pan123SDK({
   clientID: 'your-client-id',      // 必需
@@ -99,7 +99,7 @@ DEBUG_TOKEN=your-debug-token  # 可选
 
 ```typescript
 import 'dotenv/config';
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 const sdk = new Pan123SDK({
   clientID: process.env.CLIENT_ID!,

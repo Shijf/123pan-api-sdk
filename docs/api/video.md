@@ -736,7 +736,7 @@ if (result.code === 0) {
 ### 基础转码流程
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 async function videoTranscodeWorkflow() {
   const sdk = new Pan123SDK({

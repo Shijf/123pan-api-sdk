@@ -20,22 +20,22 @@
 
 ::: code-group
 ```bash [npm]
-npm install 123pan-api-sdk
+npm install @sharef/123pan-sdk
 ```
 
 ```bash [yarn]
-yarn add 123pan-api-sdk
+yarn add @sharef/123pan-sdk
 ```
 
 ```bash [pnpm]
-pnpm add 123pan-api-sdk
+pnpm add @sharef/123pan-sdk
 ```
 :::
 
 ### 基础使用
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 // 初始化 SDK
 const sdk = new Pan123SDK({

@@ -14,7 +14,7 @@
 ### 初始化 SDK
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 const sdk = new Pan123SDK({
   clientID: process.env.CLIENT_ID!,

@@ -412,7 +412,7 @@ interface TrafficLogItem {
 ### 基础使用流程
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 async function directLinkWorkflow() {
   const sdk = new Pan123SDK({

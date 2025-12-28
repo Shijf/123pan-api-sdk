@@ -58,7 +58,7 @@ interface ApiResponse<UserInfo> {
 ## 完整示例
 
 ```typescript
-import Pan123SDK from '123pan-api-sdk';
+import Pan123SDK from '@sharef/123pan-sdk';
 
 async function getUserProfile() {
   const sdk = new Pan123SDK({
