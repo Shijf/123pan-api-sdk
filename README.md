@@ -8,6 +8,7 @@
 
 ## 📚 文档
 
+- **完整文档**: [https://blog.sharef.top/123pan-api-sdk/](https://blog.sharef.top/123pan-api-sdk/)
 - **官方 API 文档**: [123Pan 开放平台文档](https://123yunpan.yuque.com/org-wiki-123yunpan-muaork/cr6ced)
 - **开放平台**: [123Pan 开放平台](https://www.123pan.com/open)
 
