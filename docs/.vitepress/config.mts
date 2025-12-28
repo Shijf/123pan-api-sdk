@@ -6,6 +6,9 @@ export default defineConfig({
   
   lang: 'zh-CN',
   
+  // 使用自定义域名时，base 设置为 '/'
+  base: '/',
+  
   // 忽略死链接检查（本地开发链接和未完成的页面）
   ignoreDeadLinks: [
     // 忽略本地开发链接
