@@ -6,8 +6,8 @@ export default defineConfig({
   
   lang: 'zh-CN',
   
-  // 使用自定义域名时，base 设置为 '/'
-  base: '/',
+  // 自定义域名的子路径部署：blog.sharef.top/123pan-api-sdk/
+  base: '/123pan-api-sdk/',
   
   // 忽略死链接检查（本地开发链接和未完成的页面）
   ignoreDeadLinks: [
