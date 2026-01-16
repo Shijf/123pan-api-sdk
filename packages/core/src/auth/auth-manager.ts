@@ -2,9 +2,17 @@
  * 认证管理器 - 负责获取和管理access token
  */
 
-import axios, { AxiosInstance } from 'axios';
-import { Logger, createModuleLogger, LogLevel } from '../logger';
-import type { SdkConfig, AccessTokenResponse, TokenInfo, ApiError } from '../types';
+import axios, { AxiosInstance } from "axios";
+import { Logger, createModuleLogger, LogLevel } from "../logger";
+import type {
+  SdkConfig,
+  AccessTokenResponse,
+  TokenInfo,
+  ApiError,
+} from "../types";
+import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
 
 export class AuthManager {
   private clientID: string;
@@ -16,43 +24,76 @@ export class AuthManager {
   private tokenRefreshPromise: Promise<TokenInfo> | null = null;
   private logger: Logger;
   private config: SdkConfig;
+  private cacheEnabled: boolean;
+  private cacheFilePath: string;
 
   constructor(config: SdkConfig) {
     this.config = config;
     this.clientID = config.clientID;
     this.clientSecret = config.clientSecret;
-    this.baseURL = config.baseURL || 'https://open-api.123pan.com';
+    this.baseURL = config.baseURL || "https://open-api.123pan.com";
     this.timeout = config.timeout || 30000;
 
-    // 初始化日志器
+    // 初始化日志器（移到前面，因为后续可能需要使用）
     const loggerConfig = config.loggerConfig || {};
-    const logLevel = loggerConfig.level ? LogLevel[loggerConfig.level] : (config.debug ? LogLevel.DEBUG : LogLevel.INFO);
-    
-    this.logger = createModuleLogger('AuthManager', {
+    const logLevel = loggerConfig.level
+      ? LogLevel[loggerConfig.level]
+      : config.debug
+        ? LogLevel.DEBUG
+        : LogLevel.INFO;
+
+    this.logger = createModuleLogger("AuthManager", {
       level: logLevel,
       enableConsole: loggerConfig.enableConsole !== false,
       enableRemote: loggerConfig.enableRemote || false,
-      ...(loggerConfig.remoteEndpoint && { remoteEndpoint: loggerConfig.remoteEndpoint }),
+      ...(loggerConfig.remoteEndpoint && {
+        remoteEndpoint: loggerConfig.remoteEndpoint,
+      }),
       colors: loggerConfig.colors !== false,
       maxEntries: loggerConfig.maxEntries || 1000,
     });
+
+    // 初始化缓存配置
+    this.cacheEnabled = config.cacheConfig?.enabled !== false;
+    const cacheDir =
+      config.cacheConfig?.cacheDir || path.join(os.homedir(), ".123pan-sdk");
+    const cacheFileName = config.cacheConfig?.fileName || "token-cache.json";
+    this.cacheFilePath = path.join(cacheDir, cacheFileName);
+
+    // 确保缓存目录存在
+    if (this.cacheEnabled && !fs.existsSync(cacheDir)) {
+      try {
+        fs.mkdirSync(cacheDir, { recursive: true });
+      } catch (error) {
+        this.logger.warn(
+          "Failed to create cache directory, caching disabled",
+          error as Error,
+        );
+        this.cacheEnabled = false;
+      }
+    }
 
     this.httpClient = axios.create({
       baseURL: this.baseURL,
       timeout: this.timeout,
       headers: {
-        'User-Agent': '123pan-api-sdk',
-        'Content-Type': 'application/json',
-        'platform': 'open_platform', // 添加平台字段
+        "User-Agent": "123pan-api-sdk",
+        "Content-Type": "application/json",
+        platform: "open_platform", // 添加平台字段
       },
     });
 
     this.setupInterceptors();
 
+    // 尝试从缓存加载token
+    if (this.cacheEnabled) {
+      this.loadTokenFromCache();
+    }
+
     // 如果在debug模式下提供了预设token，直接使用
     if (config.debug && config.debugToken) {
       this.setDebugToken(config.debugToken);
-      this.logger.info('Using debug token instead of API authentication');
+      this.logger.info("Using debug token instead of API authentication");
     } else {
       /** 初始化时，拿一下 token */
       this.forceRefreshToken();
@@ -72,7 +113,7 @@ export class AuthManager {
           throw apiError;
         }
         throw error;
-      }
+      },
     );
   }
 
@@ -82,39 +123,41 @@ export class AuthManager {
   async getAccessToken(): Promise<string> {
     // 如果使用debug token且有效，直接返回
     if (this.isUsingDebugToken() && this.tokenInfo && this.isTokenValid()) {
-      this.logger.debug('Using debug token');
+      this.logger.debug("Using debug token");
       return this.tokenInfo.accessToken;
     }
 
     // 如果token存在且未过期，直接返回
     if (this.tokenInfo && this.isTokenValid()) {
-      this.logger.debug('Using existing valid access token');
+      this.logger.debug("Using existing valid access token");
       return this.tokenInfo.accessToken;
     }
 
     // 如果使用debug token但已过期，警告用户
     if (this.isUsingDebugToken()) {
-      this.logger.warn('Debug token has expired, please update debugToken in config');
-      throw new Error('Debug token has expired');
+      this.logger.warn(
+        "Debug token has expired, please update debugToken in config",
+      );
+      throw new Error("Debug token has expired");
     }
 
     // 如果正在刷新token，等待刷新完成
     if (this.tokenRefreshPromise) {
-      this.logger.debug('Token refresh in progress, waiting for completion');
+      this.logger.debug("Token refresh in progress, waiting for completion");
       const tokenInfo = await this.tokenRefreshPromise;
       return tokenInfo.accessToken;
     }
 
     // 刷新token
-    this.logger.info('Refreshing access token');
+    this.logger.info("Refreshing access token");
     this.tokenRefreshPromise = this.refreshToken();
-    
+
     try {
       const tokenInfo = await this.tokenRefreshPromise;
-      this.logger.info('Access token refreshed successfully');
+      this.logger.info("Access token refreshed successfully");
       return tokenInfo.accessToken;
     } catch (error) {
-      this.logger.error('Failed to refresh access token', error as Error);
+      this.logger.error("Failed to refresh access token", error as Error);
       throw error;
     } finally {
       this.tokenRefreshPromise = null;
@@ -126,52 +169,58 @@ export class AuthManager {
    */
   private async refreshToken(): Promise<TokenInfo> {
     try {
-      this.logger.debug('Requesting new access token from API');
+      this.logger.debug("Requesting new access token from API");
       const response = await this.httpClient.post<AccessTokenResponse>(
-        '/api/v1/access_token',
+        "/api/v1/access_token",
         {
           clientID: this.clientID,
           clientSecret: this.clientSecret,
-        }
+        },
       );
 
-      this.logger.debug('Token API response received', {
+      this.logger.debug("Token API response received", {
         status: response.status,
-        data: response.data
+        data: response.data,
       });
 
       // 检查API响应格式
       if (!response.data) {
-        throw new Error('Invalid API response: missing data field');
+        throw new Error("Invalid API response: missing data field");
       }
 
       let tokenData;
       const responseData = response.data;
 
       // 只支持包装格式：{code, message, data, x-traceID}
-      if (typeof responseData.code === 'undefined') {
-        throw new Error('Invalid token response: missing code field (expected wrapped format)');
+      if (typeof responseData.code === "undefined") {
+        throw new Error(
+          "Invalid token response: missing code field (expected wrapped format)",
+        );
       }
 
-      this.logger.debug('Processing wrapped API response format');
-      
+      this.logger.debug("Processing wrapped API response format");
+
       if (responseData.code !== 0) {
-        const errorMessage = responseData.message || 'Unknown API error';
-        const traceId = responseData['x-traceID'] || 'unknown';
-        
-        this.logger.error('Token API returned error', new Error(errorMessage), {
+        const errorMessage = responseData.message || "Unknown API error";
+        const traceId = responseData["x-traceID"] || "unknown";
+
+        this.logger.error("Token API returned error", new Error(errorMessage), {
           code: responseData.code,
           message: errorMessage,
           traceId: traceId,
-          data: responseData.data
+          data: responseData.data,
         });
-        
-        throw new Error(`Token API error (code: ${responseData.code}): ${errorMessage} [TraceID: ${traceId}]`);
+
+        throw new Error(
+          `Token API error (code: ${responseData.code}): ${errorMessage} [TraceID: ${traceId}]`,
+        );
       }
 
       // 验证成功响应的数据结构
       if (!responseData.data || !responseData.data.accessToken) {
-        throw new Error('Invalid token response: missing accessToken in data field');
+        throw new Error(
+          "Invalid token response: missing accessToken in data field",
+        );
       }
 
       tokenData = responseData.data;
@@ -180,9 +229,10 @@ export class AuthManager {
       const { accessToken, expiresIn, tokenType } = tokenData;
 
       // 验证expiresIn是否为有效数字
-      const expiresInMs = typeof expiresIn === 'number' && expiresIn > 0 
-        ? expiresIn * 1000 
-        : 3600 * 1000; // 默认1小时
+      const expiresInMs =
+        typeof expiresIn === "number" && expiresIn > 0
+          ? expiresIn * 1000
+          : 3600 * 1000; // 默认1小时
 
       this.tokenInfo = {
         accessToken: accessToken,
@@ -190,7 +240,9 @@ export class AuthManager {
         tokenType: tokenType,
       };
 
-      this.logger.debug('Access token received and stored', {
+      this.saveTokenToCache();
+
+      this.logger.debug("Access token received and stored", {
         tokenType: tokenType,
         expiresIn: expiresIn,
         expiresInSeconds: expiresInMs / 1000,
@@ -199,7 +251,7 @@ export class AuthManager {
 
       return this.tokenInfo;
     } catch (error) {
-      this.logger.error('Token refresh API call failed', error as Error);
+      this.logger.error("Token refresh API call failed", error as Error);
       this.tokenInfo = null;
       throw error;
     }
@@ -219,9 +271,10 @@ export class AuthManager {
    * 清除token信息
    */
   clearToken(): void {
-    this.logger.info('Clearing stored access token');
+    this.logger.info("Clearing stored access token");
     this.tokenInfo = null;
     this.tokenRefreshPromise = null;
+    this.deleteCacheFile();
   }
 
   /**
@@ -259,16 +312,16 @@ export class AuthManager {
    */
   private setDebugToken(debugToken: string): void {
     if (!this.config.debug) {
-      this.logger.warn('Debug token can only be used in debug mode');
+      this.logger.warn("Debug token can only be used in debug mode");
       return;
     }
 
     // 解析JWT token获取过期时间
     let expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 默认24小时后过期
-    
+
     try {
       // 简单解析JWT token的payload部分
-      const parts = debugToken.split('.');
+      const parts = debugToken.split(".");
       if (parts.length === 3) {
         const payload = JSON.parse(atob(parts[1]));
         if (payload.exp) {
@@ -276,17 +329,20 @@ export class AuthManager {
         }
       }
     } catch (error) {
-      this.logger.warn('Failed to parse debug token expiration, using default 24h', error as Error);
+      this.logger.warn(
+        "Failed to parse debug token expiration, using default 24h",
+        error as Error,
+      );
     }
 
     this.tokenInfo = {
       accessToken: debugToken,
       expiresAt: expiresAt,
-      tokenType: 'Bearer',
+      tokenType: "Bearer",
     };
 
-    this.logger.debug('Debug token set successfully', {
-      tokenType: 'Bearer',
+    this.logger.debug("Debug token set successfully", {
+      tokenType: "Bearer",
       expiresAt: new Date(expiresAt).toISOString(),
       tokenLength: debugToken.length,
     });
@@ -297,5 +353,78 @@ export class AuthManager {
    */
   private isUsingDebugToken(): boolean {
     return !!(this.config.debug && this.config.debugToken && this.tokenInfo);
+  }
+
+  /**
+   * 从缓存文件加载token
+   */
+  private loadTokenFromCache(): void {
+    if (!this.cacheEnabled || !fs.existsSync(this.cacheFilePath)) {
+      return;
+    }
+
+    try {
+      const cacheContent = fs.readFileSync(this.cacheFilePath, "utf-8");
+      const cachedToken: TokenInfo = JSON.parse(cacheContent);
+
+      if (
+        cachedToken.accessToken &&
+        cachedToken.expiresAt &&
+        Date.now() < cachedToken.expiresAt
+      ) {
+        this.tokenInfo = cachedToken;
+        this.logger.info("Loaded valid access token from cache", {
+          expiresAt: new Date(cachedToken.expiresAt).toISOString(),
+        });
+      } else {
+        this.logger.debug("Cached token is expired, will fetch new one");
+        this.deleteCacheFile();
+      }
+    } catch (error) {
+      this.logger.warn(
+        "Failed to load token from cache, will fetch new one",
+        error as Error,
+      );
+      this.deleteCacheFile();
+    }
+  }
+
+  /**
+   * 保存token到缓存文件
+   */
+  private saveTokenToCache(): void {
+    if (!this.cacheEnabled || !this.tokenInfo) {
+      return;
+    }
+
+    try {
+      fs.writeFileSync(
+        this.cacheFilePath,
+        JSON.stringify(this.tokenInfo, null, 2),
+        "utf-8",
+      );
+      this.logger.debug("Token saved to cache", {
+        path: this.cacheFilePath,
+        expiresAt: new Date(this.tokenInfo.expiresAt).toISOString(),
+      });
+    } catch (error) {
+      this.logger.warn("Failed to save token to cache", error as Error);
+    }
+  }
+
+  /**
+   * 删除缓存文件
+   */
+  private deleteCacheFile(): void {
+    if (!this.cacheEnabled || !fs.existsSync(this.cacheFilePath)) {
+      return;
+    }
+
+    try {
+      fs.unlinkSync(this.cacheFilePath);
+      this.logger.debug("Cache file deleted", { path: this.cacheFilePath });
+    } catch (error) {
+      this.logger.warn("Failed to delete cache file", error as Error);
+    }
   }
 }

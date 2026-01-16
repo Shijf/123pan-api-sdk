@@ -20,12 +20,18 @@ export interface SdkConfig {
   };
   // 日志配置
   loggerConfig?: {
-    level?: 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'SILENT';
+    level?: "DEBUG" | "INFO" | "WARN" | "ERROR" | "SILENT";
     enableConsole?: boolean;
     enableRemote?: boolean;
     remoteEndpoint?: string;
     colors?: boolean;
     maxEntries?: number;
+  };
+  // 缓存配置
+  cacheConfig?: {
+    enabled?: boolean;
+    cacheDir?: string;
+    fileName?: string;
   };
 }
 
@@ -49,7 +55,7 @@ export interface ApiResponse<T = any> {
   code: number;
   message: string;
   data: T;
-  'x-traceID'?: string; // 追踪ID，用于问题排查
+  "x-traceID"?: string; // 追踪ID，用于问题排查
 }
 
 // 错误响应
@@ -124,7 +130,7 @@ export interface OfflineTask {
   taskId: string;
   taskName: string;
   taskUrl: string;
-  taskStatus: 'pending' | 'downloading' | 'completed' | 'failed' | 'paused';
+  taskStatus: "pending" | "downloading" | "completed" | "failed" | "paused";
   progress: number;
   fileSize?: number;
   downloadSpeed?: number;
@@ -134,7 +140,7 @@ export interface OfflineTask {
 }
 
 // HTTP方法类型
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 // 上传进度回调
 export type UploadProgressCallback = (progress: {
