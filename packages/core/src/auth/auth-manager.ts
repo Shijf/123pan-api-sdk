@@ -94,9 +94,11 @@ export class AuthManager {
     if (config.debug && config.debugToken) {
       this.setDebugToken(config.debugToken);
       this.logger.info("Using debug token instead of API authentication");
-    } else {
-      /** 初始化时，拿一下 token */
+    } else if (!this.tokenInfo || !this.isTokenValid()) {
+      /** 只有当缓存token无效或不存在时，才刷新token */
       this.forceRefreshToken();
+    } else {
+      this.logger.info("Using cached access token");
     }
   }
 
